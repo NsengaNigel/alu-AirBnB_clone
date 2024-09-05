@@ -1,49 +1,55 @@
 #!/usr/bin/python3
-
 """
-This is a sample module.
+BaseModel module
 """
 
-def greet(name: str) -> None:
-    """
-    Print a personalized greeting message.
+import uuid
+from datetime import datetime
 
-    Args:
-        name (str): The person's name.
-
-    Returns:
-        None
+class BaseModel:
     """
-    print(f"Hello, {name}!")
-
-class Person:
-    """
-    A class representing a person.
+    Base class that defines all common attributes/methods for other classes.
     """
 
-    def __init__(self, name: str, age: int) -> None:
+    def __init__(self, *args, **kwargs):
         """
-        Initialize a Person object.
-
-        Args:
-            name (str): The person's name.
-            age (int): The person's age.
-
-        Returns:
-            None
+        Initializes a new instance of BaseModel.
+        If kwargs are provided, create the instance from the dictionary representation.
+        Otherwise, create a new instance with a unique id and current datetime.
         """
-        self.name = name
-        self.age = age
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == 'created_at' or key == 'updated_at':
+                    setattr(self, key, datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f'))
+                elif key != '__class__':
+                    setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = self.created_at
 
-    def say_hello(self) -> None:
+    def __str__(self):
         """
-        Print a greeting message.
-
-        Returns:
-            None
+        Returns the string representation of the instance.
+        Format: [<class name>] (<self.id>) <self.__dict__>
         """
-        print(f"Hello, my name is {self.name} and I am {self.age} years old.")
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
-if __name__ == "__main__":
-    person = Person("John Doe", 30)
-    person.say_hello()
+    def save(self):
+        """
+        Updates the public instance attribute `updated_at` with the current datetime.
+        """
+        self.updated_at = datetime.now()
+
+    def to_dict(self):
+        """
+        Returns a dictionary containing all keys/values of the instance's __dict__.
+        Adds __class__ key with the class name.
+        Converts created_at and updated_at to ISO format strings.
+        """
+        my_dict = self.__dict__.copy()
+        my_dict['__class__'] = self.__class__.__name__
+        my_dict['created_at'] = self.created_at.isoformat()
+        my_dict['updated_at'] = self.updated_at.isoformat()
+        return my_dict
+
