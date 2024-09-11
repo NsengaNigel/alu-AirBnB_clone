@@ -14,14 +14,13 @@ class BaseModel:
     def __init__(self, *args, **kwargs):
         """
         Initializes a new instance of BaseModel.
-        If kwargs are provided, create the instance from the dictionary representation.
-        Otherwise, create a new instance with a unique id and current datetime.
+        Assigns id, created_at, and updated_at.
         """
         if kwargs:
             for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
                     setattr(self, key, datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f'))
-                elif key != '__class__':
+                else:
                     setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
@@ -52,4 +51,3 @@ class BaseModel:
         my_dict['created_at'] = self.created_at.isoformat()
         my_dict['updated_at'] = self.updated_at.isoformat()
         return my_dict
-
