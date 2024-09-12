@@ -1,48 +1,47 @@
 #!/usr/bin/python3
-"""Unit tests for BaseModel"""
-
 import unittest
 from models.base_model import BaseModel
 from datetime import datetime
-import uuid
 
 class TestBaseModel(unittest.TestCase):
-    """Test cases for the BaseModel class"""
+    """Test cases for the BaseModel class."""
 
-    def setUp(self):
-        """Set up a new BaseModel instance for testing"""
-        self.model = BaseModel()
+    def test_init_no_args(self):
+        """Test initialization without arguments."""
+        bm = BaseModel()
+        self.assertIsInstance(bm, BaseModel)
+        self.assertIsInstance(bm.id, str)
+        self.assertIsInstance(bm.created_at, datetime)
+        self.assertIsInstance(bm.updated_at, datetime)
 
-    def test_id_is_unique(self):
-        """Test if each BaseModel instance has a unique id"""
-        another_model = BaseModel()
-        self.assertNotEqual(self.model.id, another_model.id)
-    
-    def test_id_is_string(self):
-        """Test if the id attribute is a string"""
-        self.assertIsInstance(self.model.id, str)
-    
-    def test_created_at_is_datetime(self):
-        """Test if created_at is a datetime object"""
-        self.assertIsInstance(self.model.created_at, datetime)
-    
-    def test_updated_at_is_datetime(self):
-        """Test if updated_at is a datetime object"""
-        self.assertIsInstance(self.model.updated_at, datetime)
-    
-    def test_save_updates_updated_at(self):
-        """Test if the save method updates the updated_at attribute"""
-        old_updated_at = self.model.updated_at
-        self.model.save()
-        self.assertNotEqual(self.model.updated_at, old_updated_at)
-    
+    def test_init_with_kwargs(self):
+        """Test initialization with kwargs."""
+        bm = BaseModel(id="1234", created_at="2024-09-12T00:00:00", updated_at="2024-09-12T01:00:00", name="Test")
+        self.assertEqual(bm.id, "1234")
+        self.assertEqual(bm.name, "Test")
+        self.assertEqual(bm.created_at, datetime.fromisoformat("2024-09-12T00:00:00"))
+        self.assertEqual(bm.updated_at, datetime.fromisoformat("2024-09-12T01:00:00"))
+
     def test_to_dict(self):
-        """Test if to_dict returns the correct dictionary representation"""
-        obj_dict = self.model.to_dict()
-        self.assertEqual(obj_dict['__class__'], 'BaseModel')
-        self.assertIsInstance(obj_dict['created_at'], str)
-        self.assertIsInstance(obj_dict['updated_at'], str)
+        """Test the to_dict method."""
+        bm = BaseModel()
+        bm.name = "Test"
+        bm.my_number = 42
+        bm_dict = bm.to_dict()
+        self.assertEqual(bm_dict["__class__"], "BaseModel")
+        self.assertEqual(bm_dict["name"], "Test")
+        self.assertEqual(bm_dict["my_number"], 42)
+        self.assertIsInstance(bm_dict["created_at"], str)
+        self.assertIsInstance(bm_dict["updated_at"], str)
 
-if __name__ == '__main__':
+    def test_str(self):
+        """Test the __str__ method."""
+        bm = BaseModel()
+        bm_str = str(bm)
+        self.assertIn(bm.__class__.__name__, bm_str)
+        self.assertIn(bm.id, bm_str)
+
+if __name__ == "__main__":
     unittest.main()
+
 

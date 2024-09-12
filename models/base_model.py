@@ -5,11 +5,18 @@ from datetime import datetime
 class BaseModel:
     """Base class that defines all common attributes and methods for other classes."""
     
-    def __init__(self):
-        """Initializes a new instance with a unique ID and timestamps."""
-        self.id = str(uuid.uuid4())  # Generate a unique ID
-        self.created_at = datetime.now()  # Set the current time
-        self.updated_at = datetime.now()  # Set the current time
+    def __init__(self, *args, **kwargs):
+        """Initializes a new instance or re-creates an instance from a dictionary."""
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    setattr(self, key, datetime.fromisoformat(value))
+                elif key != "__class__":
+                    setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())  # Generate a unique ID
+            self.created_at = datetime.now()  # Set the current time
+            self.updated_at = datetime.now()  # Set the current time
 
     def __str__(self):
         """Returns a string representation of the instance."""
@@ -26,5 +33,6 @@ class BaseModel:
         dict_rep["created_at"] = self.created_at.isoformat()  # Convert to ISO format
         dict_rep["updated_at"] = self.updated_at.isoformat()  # Convert to ISO format
         return dict_rep
+
 
 
