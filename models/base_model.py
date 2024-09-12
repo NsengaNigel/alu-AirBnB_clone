@@ -1,41 +1,42 @@
 #!/usr/bin/python3
-import json
-from models.base_model import BaseModel
+"""Module for defining the BaseModel class."""
 
-class FileStorage:
-    """Class to handle file storage of model instances."""
+import uuid
+from datetime import datetime
+from models import storage
 
-    __file_path = "file.json"
-    __objects = {}
+class BaseModel:
+    """BaseModel class with common attributes/methods for all models."""
 
-    def all(self):
-        """Returns the dictionary of all stored objects."""
-        return FileStorage.__objects
+    def __init__(self, *args, **kwargs):
+        """Initialize a new BaseModel instance."""
+        if kwargs:
+            self.__dict__.update(kwargs)
+            self.created_at = datetime.strptime(kwargs['created_at'], "%Y-%m-%dT%H:%M:%S.%f")
+            self.updated_at = datetime.strptime(kwargs['updated_at'], "%Y-%m-%dT%H:%M:%S.%f")
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.utcnow()
+            self.updated_at = datetime.utcnow()
+            storage.new(self)
 
-    def new(self, obj):
-        """Adds a new object to the storage."""
-        if obj:
-            key = "{}.{}".format(type(obj).__name__, obj.id)
-            FileStorage.__objects[key] = obj
+    def __str__(self):
+        """Return string representation of the instance."""
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
-        """Serializes __objects to a JSON file."""
-        with open(FileStorage.__file_path, 'w') as f:
-            json.dump({key: obj.to_dict() for key, obj in FileStorage.__objects.items()}, f)
+        """Update updated_at with current time and save the instance to storage."""
+        self.updated_at = datetime.utcnow()
+        storage.save()
 
-    def reload(self):
-        """Deserializes JSON file to __objects."""
-        try:
-            with open(FileStorage.__file_path, 'r') as f:
-                obj_dict = json.load(f)
-                for key, value in obj_dict.items():
-                    class_name = value["__class__"]
-                    if class_name == "BaseModel":
-                        cls = BaseModel
-                        obj = cls(**value)
-                        FileStorage.__objects[key] = obj
-        except FileNotFoundError:
-            pass
+    def to_dict(self):
+        """Return a dictionary representation of the instance."""
+        dict_rep = self.__dict__.copy()
+        dict_rep['__class__'] = self.__class__.__name__
+        dict_rep['created_at'] = self.created_at.isoformat()
+        dict_rep['updated_at'] = self.updated_at.isoformat()
+        return dict_rep
+
 
 
 
