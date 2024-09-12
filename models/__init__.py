@@ -1,13 +1,11 @@
-from models.base_model import BaseModel
-from models.user import User
+#!/usr/bin/python3
 
+"""
+The class for storage configuration
+"""
+
+# models/__init__.py
 from models.engine.file_storage import FileStorage
 
 storage = FileStorage()
 storage.reload()
-loaded_objects = storage.all()
-
-classes = {
-    "BaseModel": BaseModel,
-    "User": User,
-}
