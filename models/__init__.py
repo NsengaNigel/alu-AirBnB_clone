@@ -1,6 +1,10 @@
 #!/usr/bin/python3
-"""Initialization module for the models package."""
 
+"""
+The class for storage configuration
+"""
+
+# models/__init__.py
 from models.engine.file_storage import FileStorage
 
 storage = FileStorage()
