@@ -47,7 +47,6 @@ class HBNBCommand(cmd.Cmd):
             arg (str): The argument should contain the <class_name>.
         """
 
-        print(arg.split(" ")[0])
         class_name = arg.split(" ")[0]
 
         if not class_name:

@@ -61,7 +61,6 @@ class FileStorage:
 
                 for key, value in obj_dict.items():
                     self.__objects[key] = eval(
-                        f"{value['__class__']}(**{value})"
-                    )
+                        f"{value['__class__']}(**{value})")
         except FileNotFoundError:
             pass

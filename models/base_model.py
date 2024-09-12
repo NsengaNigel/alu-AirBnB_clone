@@ -3,6 +3,7 @@
 BaseModel module
 """
 
+import models
 import uuid
 from datetime import datetime
 
@@ -38,7 +39,9 @@ class BaseModel:
         """
         Updates the public instance attribute `updated_at` with the current datetime.
         """
+        print("\n\n Reached the place...\n\n")
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """

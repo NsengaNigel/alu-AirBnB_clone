@@ -9,5 +9,5 @@ loaded_objects = storage.all()
 
 classes = {
     "BaseModel": BaseModel,
-    "User": User
+    "User": User,
 }
