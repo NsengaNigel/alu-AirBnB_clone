@@ -1,0 +1,47 @@
+#!/usr/bin/python3
+import unittest
+import json
+from models.base_model import BaseModel
+from models.engine.file_storage import FileStorage
+
+class TestFileStorage(unittest.TestCase):
+    """Test the FileStorage class."""
+
+    def setUp(self):
+        """Setup for the tests."""
+        self.storage = FileStorage()
+        self.storage.reload()
+
+    def tearDown(self):
+        """Clean up after tests."""
+        try:
+            os.remove("file.json")
+        except FileNotFoundError:
+            pass
+
+    def test_new(self):
+        """Test the new method."""
+        model = BaseModel()
+        model.name = "Test"
+        model.save()
+        all_objs = self.storage.all()
+        self.assertIn("BaseModel.{}".format(model.id), all_objs)
+
+    def test_save(self):
+        """Test the save method."""
+        model = BaseModel()
+        model.save()
+        with open("file.json", "r") as f:
+            data = json.load(f)
+            self.assertTrue(len(data) > 0)
+
+    def test_reload(self):
+        """Test the reload method."""
+        model = BaseModel()
+        model.save()
+        self.storage.reload()
+        all_objs = self.storage.all()
+        self.assertIn("BaseModel.{}".format(model.id), all_objs)
+
+if __name__ == "__main__":
+    unittest.main()
