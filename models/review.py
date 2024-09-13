@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 
 """
-The place amenity model
+The review model
 """
+
 from models.base_model import BaseModel
 
-class PlaceAmenity(BaseModel):
+class Review(BaseModel):
     """ Attributes """
-    amenity_id = ""
     place_id = ""
+    user_id = ""
+    text = ""

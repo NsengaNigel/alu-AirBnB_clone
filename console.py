@@ -9,7 +9,12 @@ from shlex import split
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
-
+from models.amenity import Amenity
+from models.city import City
+from models.state import State
+from models.place import Place
+from models.placeAmenity import PlaceAmenity
+from models.review import Review
 
 def parse(arg):
     curly_braces = re.search(r"\{(.*?)\}", arg)
@@ -33,7 +38,16 @@ class HBNBCommand(cmd.Cmd):
     HBNB command interpreter.
     """
     prompt = '(hbnb) '
-    valid_classes = ["BaseModel", "User"]  # Add other classes here as you create them
+    valid_classes = [ # Add other classes here as you create them
+        "BaseModel", 
+        "User", 
+        "Amenity",
+        "City",
+        "State",
+        "Place",
+        "PlaceAmenity",
+        "Review"
+        ]  
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
@@ -58,16 +72,6 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(eval(argl[0])().id)
             storage.save()
-        
-        # if not arg:
-        #     print("** class name missing **")
-        #     return
-        # try:
-        #     new_instance = eval(arg)()
-        #     new_instance.save()
-        #     print(new_instance.id)
-        # except NameError:
-        #     print("** class doesn't exist **")
 
     def do_show(self, arg):
         """Prints string representation of an instance based on class name and id"""
