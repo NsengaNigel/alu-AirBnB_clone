@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
 """
 Console module for the HBNB project.
+Handles all command-line interactions using a custom command interpreter.
 """
+
 import cmd
 import shlex
 from models import storage
 from models.base_model import BaseModel
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
     """
     HBNB command interpreter.
+    Allows users to interact with the system via commands.
     """
     prompt = '(hbnb) '
-    valid_classes = ["BaseModel"]  # Add other classes here as you create them
+    valid_classes = ["BaseModel", "State", "City", "Amenity", "Place", "Review"]
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
@@ -29,9 +37,12 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
-        """Creates a new instance of BaseModel, saves it and prints the id"""
+        """Creates a new instance of a class, saves it and prints the id"""
         if not arg:
             print("** class name missing **")
+            return
+        if arg not in self.valid_classes:
+            print("** class doesn't exist **")
             return
         try:
             new_instance = eval(arg)()
@@ -41,7 +52,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, arg):
-        """Prints string representation of an instance based on class name and id"""
+        """Prints the string representation of an instance based on class name and id"""
         args = shlex.split(arg)
         if not args:
             print("** class name missing **")
@@ -78,7 +89,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all string representation of all instances"""
+        """Prints all string representation of all instances or all instances of a class"""
         args = shlex.split(arg)
         obj_list = []
         if not args:
@@ -122,9 +133,10 @@ class HBNBCommand(cmd.Cmd):
             setattr(obj, attr_name, attr_value)
             obj.save()
 
+    # Help commands for each function
     def help_create(self):
         """Help message for the create command"""
-        print("Creates a new instance of BaseModel, saves it and prints the id")
+        print("Creates a new instance of a class, saves it, and prints the id")
         print("Usage: create <class name>")
 
     def help_show(self):
