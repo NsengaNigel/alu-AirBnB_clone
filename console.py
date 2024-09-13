@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 Console module for the HBNB project.
+Handles all command-line interactions using a custom command interpreter.
 """
+
 import cmd
 import shlex
 import re
@@ -36,6 +38,7 @@ def parse(arg):
 class HBNBCommand(cmd.Cmd):
     """
     HBNB command interpreter.
+    Allows users to interact with the system via commands.
     """
     prompt = '(hbnb) '
     valid_classes = [ # Add other classes here as you create them
@@ -74,7 +77,7 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_show(self, arg):
-        """Prints string representation of an instance based on class name and id"""
+        """Prints the string representation of an instance based on class name and id"""
         args = shlex.split(arg)
         if not args:
             print("** class name missing **")
@@ -111,7 +114,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all string representation of all instances"""
+        """Prints all string representation of all instances or all instances of a class"""
         args = shlex.split(arg)
         obj_list = []
         if not args:
@@ -155,9 +158,10 @@ class HBNBCommand(cmd.Cmd):
             setattr(obj, attr_name, attr_value)
             obj.save()
 
+    # Help commands for each function
     def help_create(self):
         """Help message for the create command"""
-        print("Creates a new instance of BaseModel, saves it and prints the id")
+        print("Creates a new instance of a class, saves it, and prints the id")
         print("Usage: create <class name>")
 
     def help_show(self):
