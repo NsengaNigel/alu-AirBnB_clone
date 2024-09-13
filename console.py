@@ -6,14 +6,34 @@ Handles all command-line interactions using a custom command interpreter.
 
 import cmd
 import shlex
+import re
+from shlex import split
 from models import storage
 from models.base_model import BaseModel
-from models.state import State
-from models.city import City
+from models.user import User
 from models.amenity import Amenity
+from models.city import City
+from models.state import State
 from models.place import Place
+from models.placeAmenity import PlaceAmenity
 from models.review import Review
 
+def parse(arg):
+    curly_braces = re.search(r"\{(.*?)\}", arg)
+    brackets = re.search(r"\[(.*?)\]", arg)
+    if curly_braces is None:
+        if brackets is None:
+            return [i.strip(",") for i in split(arg)]
+        else:
+            lexer = split(arg[:brackets.span()[0]])
+            retl = [i.strip(",") for i in lexer]
+            retl.append(brackets.group())
+            return retl
+    else:
+        lexer = split(arg[:curly_braces.span()[0]])
+        retl = [i.strip(",") for i in lexer]
+        retl.append(curly_braces.group())
+        return retl
 
 class HBNBCommand(cmd.Cmd):
     """
@@ -21,7 +41,16 @@ class HBNBCommand(cmd.Cmd):
     Allows users to interact with the system via commands.
     """
     prompt = '(hbnb) '
-    valid_classes = ["BaseModel", "State", "City", "Amenity", "Place", "Review"]
+    valid_classes = [ # Add other classes here as you create them
+        "BaseModel", 
+        "User", 
+        "Amenity",
+        "City",
+        "State",
+        "Place",
+        "PlaceAmenity",
+        "Review"
+        ]  
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
@@ -37,19 +66,15 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
-        """Creates a new instance of a class, saves it and prints the id"""
-        if not arg:
+        """Creates a new instance of BaseModel, saves it and prints the id"""
+        argl = parse(arg)
+        if len(argl) == 0:
             print("** class name missing **")
-            return
-        if arg not in self.valid_classes:
+        elif argl[0] not in HBNBCommand.valid_classes:
             print("** class doesn't exist **")
-            return
-        try:
-            new_instance = eval(arg)()
-            new_instance.save()
-            print(new_instance.id)
-        except NameError:
-            print("** class doesn't exist **")
+        else:
+            print(eval(argl[0])().id)
+            storage.save()
 
     def do_show(self, arg):
         """Prints the string representation of an instance based on class name and id"""

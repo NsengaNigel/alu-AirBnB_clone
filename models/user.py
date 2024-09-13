@@ -6,22 +6,11 @@ The User model
 
 from models.base_model import BaseModel
 
-class User:
+class User(BaseModel):
     """"
-    Attributes for the user model
-
-    email: string
-    password: string
-    first_name: string
-    last_name: string
+    User model and it's class attributes
     """
     email = ""
     password = ""
     first_name = ""
     last_name = ""
-
-    def __init__(self, *args, **kwargs):
-        """
-        Constructor
-        """
-        super().__init__(*args, **kwargs) # A call the the super constructor
