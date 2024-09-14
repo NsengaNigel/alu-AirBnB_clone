@@ -35,6 +35,7 @@ class FileStorage:
             dict: A dictionary of all objects currently stored.
         """
         return FileStorage.__objects
+        
     def new(self, obj):
         """
         Adds a new object to the storage.
@@ -50,8 +51,10 @@ class FileStorage:
         """
         Serializes __objects to the JSON file.
         """
-        serialized_objects = {key: obj.to_dict() 
-        for key, obj in FileStorage.__objects.items()}
+        serialized_objects = {
+        key: obj.to_dict() 
+        for key, obj in FileStorage.__objects.items()
+        }
         with open(FileStorage.__file_path, 'w') as file:
             json.dump(serialized_objects, file)
 
