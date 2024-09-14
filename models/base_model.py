@@ -12,7 +12,6 @@ class BaseModel:
     """
     def __init__(self, *args, **kwargs):
         from models import storage  # Import here to avoid circular import
-        
         if kwargs:
             for key, value in kwargs.items():
                 if key != '__class__':
@@ -35,7 +34,7 @@ class BaseModel:
 
     def save(self):
         """
-        Updates the public instance attribute `updated_at` 
+        Updates the public instance attribute `updated_at`
         with the current datetime.
         """
 
@@ -45,9 +44,11 @@ class BaseModel:
 
     def to_dict(self):
         """
-        Returns a dictionary containing all keys/values of the instance's __dict__.
+        Returns a dictionary containing all
+        keys/values of the instance's __dict__.
         Adds __class__ key with the class name.
-        Converts created_at and updated_at to ISO format strings.
+        Converts created_at and updated_at to ISO
+        format strings.
         """
         obj_dict = self.__dict__.copy()
         obj_dict['__class__'] = self.__class__.__name__
