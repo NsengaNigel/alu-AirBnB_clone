@@ -15,7 +15,6 @@ from models.amenity import Amenity
 from models.city import City
 from models.state import State
 from models.place import Place
-from models.place_amenity import PlaceAmenity
 from models.review import Review
 
 
@@ -52,7 +51,6 @@ class HBNBCommand(cmd.Cmd):
         "City",
         "State",
         "Place",
-        "PlaceAmenity",
         "Review"
     ]
 
