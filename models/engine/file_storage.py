@@ -3,7 +3,6 @@
 The class for file storage operations.
 Manages serialization and deserialization of instances to/from a JSON file.
 """
-
 import json
 import os
 from models.base_model import BaseModel
@@ -15,9 +14,11 @@ from models.place import Place
 from models.placeAmenity import PlaceAmenity
 from models.review import Review
 
+
 class FileStorage:
     """
-    Serializes instances to a JSON file and deserializes JSON file to instances.
+    Serializes instances to a JSON file
+    and deserializes JSON file to instances.
 
     Attributes:
         __file_path (str): Path to the JSON file.
@@ -50,7 +51,8 @@ class FileStorage:
         """
         Serializes __objects to the JSON file.
         """
-        serialized_objects = {key: obj.to_dict() for key, obj in FileStorage.__objects.items()}
+        serialized_objects = {key: obj.to_dict() 
+                              for key, obj in FileStorage.__objects.items()}
         with open(FileStorage.__file_path, 'w') as file:
             json.dump(serialized_objects, file)
 
