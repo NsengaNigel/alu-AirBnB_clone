@@ -23,7 +23,6 @@ class FileStorage:
         __file_path (str): Path to the JSON file.
         __objects (dict): Dictionary to store all objects.
     """
-    
     __file_path = "file.json"
     __objects = {}
 
@@ -41,7 +40,8 @@ class FileStorage:
         Adds a new object to the storage.
 
         Args:
-            obj (object): The object to be added to the storage.
+            obj (object): The object to be added
+            to the storage.
         """
         key = f"{obj.__class__.__name__}.{obj.id}"
         FileStorage.__objects[key] = obj
@@ -51,7 +51,6 @@ class FileStorage:
         Serializes __objects to the JSON file.
         """
         serialized_objects = {key: obj.to_dict() for key, obj in FileStorage.__objects.items()}
-        
         with open(FileStorage.__file_path, 'w') as file:
             json.dump(serialized_objects, file)
 
