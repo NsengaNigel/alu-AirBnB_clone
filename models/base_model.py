@@ -2,9 +2,9 @@
 """
 BaseModel module
 """
-
 import uuid
 from datetime import datetime
+
 
 class BaseModel:
     """
@@ -35,7 +35,8 @@ class BaseModel:
 
     def save(self):
         """
-        Updates the public instance attribute `updated_at` with the current datetime.
+        Updates the public instance attribute `updated_at` 
+        with the current datetime.
         """
 
         from models import storage  # Import here to avoid circular import
